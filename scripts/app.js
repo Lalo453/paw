@@ -3,7 +3,7 @@ console.log("#IvanR: Cargo app.js");
 // como parametro del arreglo de objetos
 // del modulo
 var modulo1 = 
-	angular.module("reeditgam",['ui.router']);
+	angular.module("reeditgam",['ui.router','hSweetAlert']);
 
 // Configurando las rutas
 // Recibe un arreglo de elementos
@@ -61,9 +61,9 @@ modulo1.factory('posts',[function(){
 // dependency injection
 // Creando controlador mainCtrl
 modulo1.controller("mainCtrl",[
-	'$scope','posts', // Inyectando factory post
-	function($scope, posts){
-		$scope.test = "Hola Angulars";
+	'$scope','posts','sweet', // Inyectando factory post
+	function($scope, posts, sweet){
+		$scope.test = "Hola Angular";
 		
 		// Modelo al cual se le asigna
 		// el resultado del factory
@@ -73,14 +73,24 @@ modulo1.controller("mainCtrl",[
 		 $scope.addPost = function(){
 		 	if(!$scope.title || $scope.title === "")
 		 	{
-		 		alert("No se permite postear titulos vacios");
+		 		//alert("No se permite postear titulos vacios");
+				 sweet.show('No se permite postear titulos vacios');
 		 		return;
 		 	}
 		 	$scope.posts.push(
 		 		{
 		 			title: $scope.title,
 		 			link: $scope.link,
-		 		 	upvotes: 0
+		 		 	upvotes: 0,
+					comments : [{
+						author : "Gustavo",
+						body: "Me gusto ese link.",
+						upvotes: 0},
+						{
+							author: "Keila",
+							body: "Awesome link.",
+							upvotes: 2
+						}]
 		 		 });
 		 	// Two-way data binding
 		 	$scope.title = "";
@@ -94,10 +104,18 @@ modulo1.controller("mainCtrl",[
 	}]);
 
 // Creando controlador postsCtrl
-modulo1.controller("postCtrl",[
+modulo1.controller("postsCtrl",[
 	'$scope',
 	'$stateParams',
-	'posts'],function($scope, $stateParams, posts){
+	'posts',
+	function($scope, $stateParams, posts){
+		$scope.incrementUpvotes = function (comment) {
+			comment.upvotes += 1;
+		};
 		// Cuerpo del controlador
-		
-	});
+		// Obteniendo el parmetro id de los
+		// parametros del estado de la ruta
+		// y pasandolo como argumetos
+		// al objeto del factory
+		$scope.post = posts.posts[$stateParams.id];
+	}]);
