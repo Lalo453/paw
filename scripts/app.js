@@ -63,7 +63,7 @@ modulo1.factory('posts',[function(){
 modulo1.controller("mainCtrl",[
 	'$scope','posts', // Inyectando factory post
 	function($scope, posts){
-		$scope.test = "Hola Angular";
+		$scope.test = "Hola Angulars";
 		
 		// Modelo al cual se le asigna
 		// el resultado del factory
